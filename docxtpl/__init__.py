@@ -213,7 +213,7 @@ class RichText(object):
             self.add(text, **text_prop)
 
         self.pPr = u""
-        if pPr.get("tag") and pPr.get("attrs") != None:
+        if pPr and pPr.get("tag") and pPr.get("attrs") != None:
             sattr = u""
             for attr in pPr["attrs"]:
                 if not attr.get("key") or not attr.get("val"):
