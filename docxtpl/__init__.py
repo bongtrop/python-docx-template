@@ -213,6 +213,7 @@ class RichText(object):
             self.add(text, **text_prop)
 
     def add(self, text, style=None,
+                        indent=None,
                         color=None,
                         highlight=None,
                         size=None,
@@ -251,6 +252,16 @@ class RichText(object):
             prop += u'<w:u w:val="%s"/>' % underline
         if strike:
             prop += u'<w:strike/>'
+        if indent:
+            attr = ""
+            for ind in indent:
+                if not ind.get("attr") or not ind.get("val"):
+                    continue
+
+                attr += u' w:%s="%s"'%(ind["attr"], ind["val"])
+
+            prop += u'<w:ind%s />' % attr
+
 
         self.xml += u'<w:r>'
         if prop:
