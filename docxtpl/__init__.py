@@ -207,7 +207,7 @@ class RichText(object):
 
     This is much faster than using Subdoc class, but this only for texts INSIDE an existing paragraph.
     """
-    def __init__(self, text=None, pPr=None **text_prop):
+    def __init__(self, text=None, pPr=None, **text_prop):
         self.xml = ''
         if text:
             self.add(text, **text_prop)
