@@ -15,7 +15,7 @@ import re
 import six
 
 NEWLINE =  '</w:t><w:br/><w:t xml:space="preserve">'
-NEWPARAGRAPH = '</w:t></w:r></w:p><w:p><w:r><w:t xml:space="preserve">'
+NEWPARAGRAPH = '</w:t></w:r></w:p><w:p>%s<w:r><w:t xml:space="preserve">'
 
 class DocxTemplate(object):
     """ Class for managing docx files as they were jinja2 templates """
@@ -207,10 +207,20 @@ class RichText(object):
 
     This is much faster than using Subdoc class, but this only for texts INSIDE an existing paragraph.
     """
-    def __init__(self, text=None, **text_prop):
+    def __init__(self, text=None, pPr=None **text_prop):
         self.xml = ''
         if text:
             self.add(text, **text_prop)
+
+        self.pPr = u""
+        if pPr.get("tag") and pPr.get("attrs") != None:
+            sattr = u""
+            for attr in pPr["attrs"]:
+                if not attr.get("key") or not attr.get("val"):
+                    continue
+                sattr += u' w:%s="%s"' % (attr["key"], attr["val"])
+            self.pPr = u"<w:pPr><w:%s%s /></w:pPr>" % (pPr["tag"], sattr)
+            
 
     def add(self, text, style=None,
                         indent=None,
@@ -225,7 +235,7 @@ class RichText(object):
 
         if not isinstance(text, six.text_type):
             text = text.decode('utf-8',errors='ignore')
-        text = escape(text).replace('\n',NEWLINE).replace('\a',NEWPARAGRAPH)
+        text = escape(text).replace('\n',NEWLINE).replace('\a',NEWPARAGRAPH % self.pPr)
 
         prop = u''
 
