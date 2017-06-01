@@ -208,10 +208,6 @@ class RichText(object):
     This is much faster than using Subdoc class, but this only for texts INSIDE an existing paragraph.
     """
     def __init__(self, text=None, pPr=None, **text_prop):
-        self.xml = ''
-        if text:
-            self.add(text, **text_prop)
-
         self.pPr = u""
         if pPr and pPr.get("tag") and pPr.get("attrs") != None:
             sattr = u""
@@ -220,6 +216,12 @@ class RichText(object):
                     continue
                 sattr += u' w:%s="%s"' % (attr["key"], attr["val"])
             self.pPr = u"<w:pPr><w:%s%s /></w:pPr>" % (pPr["tag"], sattr)
+        
+        self.xml = ''
+        if text:
+            self.add(text, **text_prop)
+
+        
             
 
     def add(self, text, style=None,
